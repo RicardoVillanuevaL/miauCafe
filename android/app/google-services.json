@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "678553147423",
+    "firebase_url": "https://miaucoffe-34c94.firebaseio.com",
+    "project_id": "miaucoffe-34c94",
+    "storage_bucket": "miaucoffe-34c94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678553147423:android:66cd7f114f391fba95dd2a",
+        "android_client_info": {
+          "package_name": "com.example.miau_caffe_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678553147423-dllf87gks5tkajaapip3a3p2cfugu8hq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB81yiQVgxaiMJJT19NHVRzE1ltNM2gdfA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678553147423-dllf87gks5tkajaapip3a3p2cfugu8hq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
