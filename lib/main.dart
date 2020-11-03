@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:miau_caffe_mobile/views/login/OnboardPage.dart';
-import 'package:miau_caffe_mobile/views/login/prueba.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: PruebaPage(),
+      home: OnBoardPage(),
     );
   }
 }

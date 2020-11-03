@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:miau_caffe_mobile/views/Productos/ProductosPage.dart';
+import 'package:miau_caffe_mobile/views/reservas/ReservasPage.dart';
 
 class DashBoardMenu extends StatefulWidget {
   DashBoardMenu({Key key}) : super(key: key);
@@ -72,12 +74,18 @@ class _DashBoardBodyState extends State<DashBoardBody> {
         children: [
           SpecialCard(
             text: 'Reservar',
-            press: () {},
+            press: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => ReservasPage()));
+            },
             position: 'TOP',
           ),
           SpecialCard(
             text: 'Ver carta / Promociones',
-            press: () {},
+            press: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => CatalogoProductos()));
+            },
             position: 'MID',
           ),
           SpecialCard(
@@ -102,6 +110,7 @@ class SpecialCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: press,
       child: Container(
         color: Color(0xFFb992c9),
         child: Padding(

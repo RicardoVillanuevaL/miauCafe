@@ -13,14 +13,7 @@ class _CatalogoProductosState extends State<CatalogoProductos> {
   int selectCategoria;
   @override
   void initState() {
-    categorias = [
-      'Cafés',
-      'Gatos',
-      'Desayunos',
-      'Postres',
-      'Tortas',
-      'Batidos'
-    ];
+    categorias = ['Cafés', 'Desayunos', 'Postres', 'Tortas', 'Batidos'];
     selectCategoria = 0;
     super.initState();
   }
@@ -32,22 +25,18 @@ class _CatalogoProductosState extends State<CatalogoProductos> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Productos',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Productos',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
-            categories(),
-            gridViewProductos()
-          ],
-        ),
+          ),
+          gridViewProductos()
+        ],
       ),
     );
   }
@@ -68,19 +57,23 @@ class _CatalogoProductosState extends State<CatalogoProductos> {
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(categorias[index]),
-                      Container(
-                        margin: EdgeInsets.only(top: 5),
-                        height: 2,
-                        width: 30,
-                        color: selectCategoria == index
-                            ? Colors.black
-                            : Colors.transparent,
-                      )
-                    ],
+                  child: Container(
+                    height: 100,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(categorias[index]),
+                        Container(
+                          margin: EdgeInsets.only(top: 5),
+                          height: 2,
+                          width: 30,
+                          color: selectCategoria == index
+                              ? Colors.black
+                              : Colors.transparent,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               );

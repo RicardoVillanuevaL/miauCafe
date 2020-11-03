@@ -139,7 +139,7 @@ class _OnBoardPageState extends State<OnBoardPage> {
     );
   }
 
-  pageView(double height) {
+  Widget pageView(double height) {
     return Container(
       height: height / 1.4,
       child: PageView(
@@ -153,18 +153,18 @@ class _OnBoardPageState extends State<OnBoardPage> {
         children: <Widget>[
           itemPageView(
               'assets/imagenes/adoptionSVG.svg',
-              'Se parte del cambio\nadopta un gatito',
-              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+              'Bienvenidos Humanos',
+              'Cualquier persona puede acceder a nuestro espacio felino, sin importar edad o condición.Tenemos una tarifa general para nuestros visitantes y otras especiales para niños hasta 12 años (incluido).',
               height),
           itemPageView(
               'assets/imagenes/muffinSVG.svg',
-              'Toma ricos desayunos\nhechos por Grecia 10/10',
-              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+              '¿Dónde están los gatos?',
+              'Los gatos de nuestra colonia se mueven libremente por el espacio, juegan, duermen, se acicalan... y nuestros visitantes pueden ir recorriendo el espacio e interactuar con ellos',
               height),
           itemPageView(
               'assets/imagenes/coffeSVG.svg',
-              'Esto es un ejemplo\nya no tengo imaginacion',
-              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+              'Disfruta en Miau Cafe',
+              'Nos apasiona los gatos, el café y buenos momentos con amigos.\nPero sobretodo los GATOS.',
               height),
         ],
       ),
@@ -177,8 +177,6 @@ class _OnBoardPageState extends State<OnBoardPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // height: height / 2.8,
-          //     width: height / 2.8,
           Center(
             child: SvgPicture.asset(
               image,
@@ -211,7 +209,7 @@ class _OnBoardPageState extends State<OnBoardPage> {
     );
   }
 
-  skipWidget() {
+  Widget skipWidget() {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(

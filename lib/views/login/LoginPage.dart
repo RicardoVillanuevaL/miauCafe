@@ -1,4 +1,3 @@
-import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:miau_caffe_mobile/views/dashboard/DashBoardPage.dart';
@@ -15,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
               )),
           Positioned(
               top: 50,
-              left: 240,
+              left: 300,
               child: Image.asset(
                 'assets/imagenes/huellita.png',
                 width: 60,
@@ -90,8 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                 LinkTextChange(
                   pageLogin: true,
                   press: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RegisterPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RegisterPage()));
                   },
                 )
               ],
@@ -279,7 +278,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     "REGISTRO",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: size.height * 0.03),
                   TextFieldContainer(
                     hintText: 'Nombre',
                     onChanged: (value) {},
@@ -293,30 +291,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     icon: Icons.person,
                     obscure: false,
                     suffixIcon: null,
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        DropDownField(
-                          controller: documentController,
-                          hintText: 'Doc. Identidad',
-                          enabled: true,
-                          items: documentos,
-                          onValueChanged: (value) {
-                            setState(() {
-                              selectDocument = value;
-                            });
-                          },
-                        ),
-                        TextFieldContainer(
-                          hintText: 'Número de Documento',
-                          onChanged: (value) {},
-                          icon: Icons.person,
-                          obscure: false,
-                          suffixIcon: null,
-                        ),
-                      ],
-                    ),
                   ),
                   TextFieldContainer(
                     hintText: 'Correo Electronico',
