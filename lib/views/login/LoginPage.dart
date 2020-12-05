@@ -1,22 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:miau_caffe_mobile/services/Api%20Rest/Usuario_services.dart';
+import 'package:miau_caffe_mobile/services/Firebase/Authentication.dart';
 import 'package:miau_caffe_mobile/views/dashboard/DashBoardPage.dart';
+import 'package:provider/provider.dart';
+import 'package:miau_caffe_mobile/notifications and dialog/dialogsCute.dart'
+    as dialog;
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String email = '';
+  String password = '';
+  bool obscureChange;
+
   @override
   void initState() {
+    obscureChange = true;
     super.initState();
+  }
+
+  void ingresar() async {
+    if (email.trim().isEmpty || password.trim().isEmpty) {
+      dialog.pruebaDialogImagen(context, 'Oh no!', 'Complete los campos',
+          'assets/imagenes/garrita.png');
+    } else {
+      final response = await context
+          .read<AuthenticationServices>()
+          .logeoUsuario(email, password);
+      if (response == 'ingreso') {
+        final resp =
+            await usuarioServices.loginUsuario(email.trim(), password.trim());
+        if (resp != null) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => DashBoardMenu(
+                    usuario: resp,
+                  )));
+        } else {
+          dialog.pruebaDialogImagen(context, 'Oh no!', 'Intentelo mas tarde',
+              'assets/imagenes/garrita.png');
+        }
+      } else {
+        dialog.pruebaDialogImagen(context, 'Oh no!',
+            'Ocurrio un error:\n$response', 'assets/imagenes/garrita.png');
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    Color colorSecundario = Color(0xFFb992c9);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
@@ -66,31 +103,60 @@ class _LoginPageState extends State<LoginPage> {
                   height: size.height * 0.35,
                 ),
                 TextFieldContainer(
-                  hintText: 'Correo Electronico',
-                  icon: Icons.person,
-                  onChanged: (value) {},
-                  obscure: false,
-                  suffixIcon: null,
+                  child: TextField(
+                    obscureText: false,
+                    onChanged: (value) {
+                      email = value;
+                    },
+                    maxLines: 1,
+                    cursorColor: colorSecundario,
+                    decoration: InputDecoration(
+                        icon: Icon(
+                          Icons.person,
+                          color: colorSecundario,
+                        ),
+                        hintText: 'Correo Electronico',
+                        border: InputBorder.none),
+                  ),
                 ),
                 TextFieldContainer(
-                  hintText: 'Contraseña',
-                  icon: Icons.lock,
-                  onChanged: (value) {},
-                  obscure: true,
-                  suffixIcon: Icons.visibility,
+                  child: TextField(
+                    obscureText: obscureChange,
+                    onChanged: (value) {
+                      password = value;
+                    },
+                    maxLines: 1,
+                    cursorColor: colorSecundario,
+                    decoration: InputDecoration(
+                        icon: Icon(
+                          Icons.lock,
+                          color: colorSecundario,
+                        ),
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              obscureChange = !obscureChange;
+                            });
+                          },
+                          child: Icon(
+                            Icons.visibility,
+                            color: colorSecundario,
+                          ),
+                        ),
+                        hintText: 'Contraseña',
+                        border: InputBorder.none),
+                  ),
                 ),
                 RoundedButton(
                   text: 'INGRESAR',
-                  press: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => DashBoardMenu()));
-                  },
+                  press: () => ingresar(),
                 ),
                 SizedBox(height: size.height * 0.03),
                 LinkTextChange(
                   pageLogin: true,
                   press: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RegisterPage()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => RegisterPage()));
                   },
                 )
               ],
@@ -103,19 +169,9 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class TextFieldContainer extends StatefulWidget {
-  final String hintText;
-  final IconData icon;
-  final ValueChanged<String> onChanged;
-  final bool obscure;
-  final IconData suffixIcon;
-  TextFieldContainer(
-      {Key key,
-      this.hintText,
-      this.icon,
-      this.onChanged,
-      this.obscure,
-      this.suffixIcon})
-      : super(key: key);
+  final Widget child;
+
+  TextFieldContainer({Key key, this.child}) : super(key: key);
 
   @override
   _TextFieldContainerState createState() => _TextFieldContainerState();
@@ -124,11 +180,9 @@ class TextFieldContainer extends StatefulWidget {
 class _TextFieldContainerState extends State<TextFieldContainer> {
   Color colorPrimario = Color(0xFFF1E6FF);
   Color colorSecundario = Color(0xFFb992c9);
-  bool obscureChange;
 
   @override
   void initState() {
-    obscureChange = widget.obscure;
     super.initState();
   }
 
@@ -143,30 +197,7 @@ class _TextFieldContainerState extends State<TextFieldContainer> {
         color: colorPrimario,
         borderRadius: BorderRadius.circular(29),
       ),
-      child: TextField(
-        obscureText: obscureChange,
-        onChanged: widget.onChanged,
-        maxLines: 1,
-        cursorColor: colorSecundario,
-        decoration: InputDecoration(
-            icon: Icon(
-              widget.icon,
-              color: colorSecundario,
-            ),
-            suffixIcon: GestureDetector(
-              onTap: () {
-                setState(() {
-                  obscureChange = !obscureChange;
-                });
-              },
-              child: Icon(
-                widget.suffixIcon,
-                color: colorSecundario,
-              ),
-            ),
-            hintText: widget.hintText,
-            border: InputBorder.none),
-      ),
+      child: widget.child,
     );
   }
 }
@@ -241,9 +272,16 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  List<String> documentos = ['DNI', 'PASAPORTE', 'BREVETE'];
   final documentController = TextEditingController();
+  bool obscureChange;
   String selectDocument = "";
+  Color colorSecundario = Color(0xFFb992c9);
+  @override
+  void initState() {
+    super.initState();
+    obscureChange = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -279,32 +317,107 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   TextFieldContainer(
-                    hintText: 'Nombre',
-                    onChanged: (value) {},
-                    icon: Icons.person,
-                    obscure: false,
-                    suffixIcon: null,
+                    child: TextFormField(
+                      validator: (valor) {
+                        if (valor.isEmpty) {
+                          return "Complete este campo";
+                        } else {
+                          return "";
+                        }
+                      },
+                      onSaved: (value) {},
+                      obscureText: false,
+                      onChanged: (value) {},
+                      maxLines: 1,
+                      cursorColor: colorSecundario,
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.person,
+                            color: colorSecundario,
+                          ),
+                          hintText: 'Nombre',
+                          border: InputBorder.none),
+                    ),
                   ),
                   TextFieldContainer(
-                    hintText: 'Apellido',
-                    onChanged: (value) {},
-                    icon: Icons.person,
-                    obscure: false,
-                    suffixIcon: null,
+                    child: TextFormField(
+                      validator: (valor) {
+                        if (valor.isEmpty) {
+                          return "Complete este campo";
+                        } else {
+                          return "";
+                        }
+                      },
+                      onSaved: (value) {},
+                      obscureText: false,
+                      onChanged: (value) {},
+                      maxLines: 1,
+                      cursorColor: colorSecundario,
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.person,
+                            color: colorSecundario,
+                          ),
+                          hintText: 'Apellido',
+                          border: InputBorder.none),
+                    ),
                   ),
                   TextFieldContainer(
-                    hintText: 'Correo Electronico',
-                    onChanged: (value) {},
-                    icon: Icons.mail_outline,
-                    obscure: false,
-                    suffixIcon: null,
+                    child: TextFormField(
+                      validator: (valor) {
+                        if (valor.isEmpty) {
+                          return "Complete este campo";
+                        } else {
+                          return "";
+                        }
+                      },
+                      onSaved: (value) {},
+                      obscureText: false,
+                      onChanged: (value) {},
+                      maxLines: 1,
+                      cursorColor: colorSecundario,
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.mail_outline,
+                            color: colorSecundario,
+                          ),
+                          hintText: 'Correo Electronico',
+                          border: InputBorder.none),
+                    ),
                   ),
                   TextFieldContainer(
-                    hintText: 'Contraseña',
-                    onChanged: (value) {},
-                    icon: Icons.lock,
-                    obscure: true,
-                    suffixIcon: Icons.visibility,
+                    child: TextFormField(
+                      validator: (valor) {
+                        if (valor.isEmpty) {
+                          return "Complete este campo";
+                        } else {
+                          return "";
+                        }
+                      },
+                      onSaved: (value) {},
+                      obscureText: false,
+                      onChanged: (value) {},
+                      maxLines: 1,
+                      cursorColor: colorSecundario,
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.lock,
+                            color: colorSecundario,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                obscureChange = !obscureChange;
+                              });
+                            },
+                            child: Icon(
+                              Icons.visibility,
+                              color: colorSecundario,
+                            ),
+                          ),
+                          hintText: 'Contraseña',
+                          border: InputBorder.none),
+                    ),
                   ),
                   RoundedButton(
                     text: "REGISTRAR",

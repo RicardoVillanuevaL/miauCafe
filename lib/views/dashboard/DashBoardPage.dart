@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:miau_caffe_mobile/models/UsuarioModel.dart';
 import 'package:miau_caffe_mobile/views/Productos/ProductosPage.dart';
+import 'package:miau_caffe_mobile/views/constants/complementsScaffold.dart';
 import 'package:miau_caffe_mobile/views/reservas/ReservasPage.dart';
 
 class DashBoardMenu extends StatefulWidget {
-  DashBoardMenu({Key key}) : super(key: key);
+  final Usuario usuario;
+  DashBoardMenu({Key key, this.usuario}) : super(key: key);
 
   @override
   _DashBoardMenuState createState() => _DashBoardMenuState();
 }
 
 class _DashBoardMenuState extends State<DashBoardMenu> {
+  Usuario _usuario;
+
+  @override
+  void initState() {
+    _usuario = widget.usuario;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
+        color: Colors.white,
         width: double.infinity,
         height: size.height,
         child: Stack(
@@ -23,6 +35,7 @@ class _DashBoardMenuState extends State<DashBoardMenu> {
             Positioned(
                 child: SpecialAppBar(
                   width: size.width,
+                  height: size.height * 0.24,
                   title: 'Miau Cafe',
                   icon: Icons.local_cafe,
                   child: Column(
@@ -31,15 +44,17 @@ class _DashBoardMenuState extends State<DashBoardMenu> {
                         radius: 30,
                         backgroundColor: Color(0xFF8c5f9e),
                         child: Text(
-                          'F',
+                          '${_usuario.nombre.substring(0, 1)}',
                           style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       SizedBox(
                         height: 10,
                       ),
-                      Text('Fiorella Loayza',
+                      Text('${_usuario.nombre} ${_usuario.apellido}',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold))
                     ],
@@ -109,91 +124,79 @@ class SpecialCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: press,
-      child: Container(
-        color: Color(0xFFb992c9),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: ListTile(
-            title: Text(
-              text,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 28),
-            ),
-            trailing: Icon(
-              Icons.navigate_next,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/////////////////////////////////////////
-class SpecialBottomSheet extends StatelessWidget {
-  final double width;
-  const SpecialBottomSheet({Key key, this.width}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(children: [
-      Container(
-        width: width,
-        height: 100,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage('assets/imagenes/huellitassss.jpg'))),
-      ),
-    ]);
-  }
-}
-
-class SpecialAppBar extends StatelessWidget {
-  final double width;
-  final Widget child;
-  final String title;
-  final IconData icon;
-  const SpecialAppBar({Key key, this.width, this.child, this.title, this.icon})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(alignment: Alignment.center, children: [
-      Container(
-        width: width,
-        height: 180,
-        child: Card(
-          elevation: 10,
-          color: Color(0xFFb992c9),
-          margin: EdgeInsets.only(bottom: 60),
+    if (position == 'TOP') {
+      return GestureDetector(
+        onTap: press,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+              color: Color(0xFFb992c9)),
           child: Padding(
-            padding: const EdgeInsets.only(top: 20, left: 30, right: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(title,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 28)),
-                Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 40,
-                )
-              ],
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            child: ListTile(
+              title: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 28),
+              ),
+              trailing: Icon(
+                Icons.navigate_next,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
-      ),
-      Positioned(
-        bottom: 0,
-        child: child,
-      ),
-    ]);
+      );
+    } else if (position == 'BOT') {
+      return GestureDetector(
+        onTap: press,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50)),
+              color: Color(0xFFb992c9)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            child: ListTile(
+              title: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 28),
+              ),
+              trailing: Icon(
+                Icons.navigate_next,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return GestureDetector(
+        onTap: press,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          color: Color(0xFFb992c9),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            child: ListTile(
+              title: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 28),
+              ),
+              trailing: Icon(
+                Icons.navigate_next,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 }

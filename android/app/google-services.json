@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "678553147423",
-    "firebase_url": "https://miaucoffe-34c94.firebaseio.com",
-    "project_id": "miaucoffe-34c94",
-    "storage_bucket": "miaucoffe-34c94.appspot.com"
+    "project_number": "1096652275958",
+    "firebase_url": "https://miau-cafe.firebaseio.com",
+    "project_id": "miau-cafe",
+    "storage_bucket": "miau-cafe.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:678553147423:android:66cd7f114f391fba95dd2a",
+        "mobilesdk_app_id": "1:1096652275958:android:94037e8ae6e753cbcb2cd7",
         "android_client_info": {
           "package_name": "com.example.miau_caffe_mobile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "678553147423-dllf87gks5tkajaapip3a3p2cfugu8hq.apps.googleusercontent.com",
+          "client_id": "1096652275958-ocenk4a9skn8hbkkk5f3np43jjeorlbn.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB81yiQVgxaiMJJT19NHVRzE1ltNM2gdfA"
+          "current_key": "AIzaSyBKke5dTWJfaInupxg7x_MJBs6XPz7GDf0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "678553147423-dllf87gks5tkajaapip3a3p2cfugu8hq.apps.googleusercontent.com",
+              "client_id": "1096652275958-ocenk4a9skn8hbkkk5f3np43jjeorlbn.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -50,17 +50,17 @@ class _OnBoardPageState extends State<OnBoardPage> {
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  stops: [
-                0.1,
-                0.4,
-                0.7,
-                0.9
-              ],
                   colors: [
                 Color(0xFFbeaac6),
                 Color(0xFFb992c9),
                 Color(0xFFb992c9),
                 Color(0xFFbeaac6),
+              ],
+                  stops: [
+                0.1,
+                0.4,
+                0.7,
+                0.9
               ])),
           child: SafeArea(
             child: Column(
