@@ -10,6 +10,16 @@ class AuthenticationServices {
     await _firebaseAuth.signOut();
   }
 
+  Future<bool> recuperarPassword(String email)async{
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      return false;
+    }
+  }
+
   Future<String> logeoUsuario(String email, String pass) async {
     //SING IN
     try {
@@ -31,4 +41,7 @@ class AuthenticationServices {
       return e.message;
     }
   }
+
+  //https://www.youtube.com/watch?v=rtwhS6EU-Gk
+  //https://www.youtube.com/watch?v=w0rfZm6a3Hs
 }

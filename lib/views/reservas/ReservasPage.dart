@@ -3,6 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:miau_caffe_mobile/views/constants/complementsScaffold.dart';
 import 'package:miau_caffe_mobile/views/constants/constantsDesign.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
+import 'package:day_night_time_picker/day_night_time_picker.dart';
+import 'package:day_night_time_picker/lib/constants.dart';
 
 class ReservasPage extends StatefulWidget {
   ReservasPage({Key key}) : super(key: key);
@@ -61,6 +65,8 @@ class _BodyReservaState extends State<BodyReserva> {
   double cantPersonas, cantGatos;
   bool gatos;
   int setSelectGato;
+  String diaReserva;
+  TimeOfDay _time = TimeOfDay(hour: 11, minute: 00);
 
   @override
   void initState() {
@@ -68,7 +74,33 @@ class _BodyReservaState extends State<BodyReserva> {
     cantPersonas = 1;
     cantGatos = 1;
     gatos = true;
+    inistanciarDiaHora();
     super.initState();
+  }
+
+  void inistanciarDiaHora() {
+    diaReserva = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  }
+
+  void onTimeChanged(TimeOfDay newTime) {
+    setState(() {
+      _time = newTime;
+    });
+  }
+
+  Future<Null> selectTimePicker(BuildContext context) async {
+    DateTime temp = DateTime.now();
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: temp,
+        firstDate: DateTime(temp.year, temp.month),
+        lastDate: temp.add(Duration(days: 60)));
+    if (picked != null && picked != temp) {
+      setState(() {
+        diaReserva = DateFormat('dd-MM-yyyy').format(picked);
+        print(temp.toString());
+      });
+    }
   }
 
   @override
@@ -89,27 +121,46 @@ class _BodyReservaState extends State<BodyReserva> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('${DateTime.now()}'),
+                Text('$diaReserva'),
                 IconButton(
                   icon: Icon(Icons.calendar_today),
-                  onPressed: () {},
+                  onPressed: () => selectTimePicker(context),
                 )
               ],
             ),
-            SizedBox(
-              height: 20
-            ),
+            SizedBox(height: 20),
             Text(
               'Seleccione Hora',
               style: styleTextFieldReserva,
             ),
-            TextField(
-              maxLines: 1,
-              decoration: InputDecoration(suffixIcon: Icon(Icons.timer)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('${_time.format(context)}'),
+                IconButton(
+                  icon: Icon(Icons.timer),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      showPicker(
+                        context: context,
+                        value: _time,
+                        onChange: onTimeChanged,
+                        minuteInterval: MinuteInterval.FIVE,
+                        disableHour: false,
+                        disableMinute: false,
+                        minMinute: 7,
+                        maxMinute: 56,
+                        // Optional onChange to receive value as DateTime
+                        onChangeDateTime: (DateTime dateTime) {
+                          print(dateTime);
+                        },
+                      ),
+                    );
+                  },
+                )
+              ],
             ),
-            SizedBox(
-              height: 25
-            ),
+            SizedBox(height: 25),
             Text(
               'Cantidad de Personas',
               style: styleTextFieldReserva,

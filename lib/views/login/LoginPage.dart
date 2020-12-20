@@ -272,9 +272,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final documentController = TextEditingController();
   bool obscureChange;
-  String selectDocument = "";
   Color colorSecundario = Color(0xFFb992c9);
   @override
   void initState() {
