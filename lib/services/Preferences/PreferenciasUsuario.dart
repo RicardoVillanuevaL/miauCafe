@@ -45,12 +45,21 @@ class PreferenciasUsuario {
   }
 
   //CORREO
-  get correo {
+  String get correo {
     return _preferences.getString('correo') ?? '';
   }
 
   set correo(String value) {
     _preferences.setString('correo', value);
+  }
+
+  //PASSWORD
+  String get password {
+    return _preferences.getString('password') ?? '';
+  }
+
+  set password(String value) {
+    _preferences.setString('password', value);
   }
 
   //SESSION
@@ -60,5 +69,14 @@ class PreferenciasUsuario {
 
   set session(bool value) {
     _preferences.setBool('session', value);
+  }
+
+  //SKIP CARRUSEL
+  get skipCarrusel {
+    return _preferences.getBool('skip') ?? false;
+  }
+
+  set skipCarrusel(bool value) {
+    _preferences.setBool('skip', value);
   }
 }

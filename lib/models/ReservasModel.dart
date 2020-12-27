@@ -1,14 +1,11 @@
 import 'dart:convert';
 
 Reserva reservaFromJson(String str) => Reserva.fromJson(json.decode(str));
-
 String reservaToJson(Reserva data) => json.encode(data.toJson());
-
-//List<ReservaList> reservaListFromJson(String str) => List<ReservaList>.from(json.decode(str).map((x) => ReservaList.fromJson(x)));
-//String reservaListToJson(List<ReservaList> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Reserva {
   Reserva({
+    this.id,
     this.fecha,
     this.hora,
     this.personas,
@@ -16,7 +13,7 @@ class Reserva {
     this.gatos,
     this.usuario,
   });
-
+  int id;
   DateTime fecha;
   String hora;
   int personas;
@@ -25,12 +22,13 @@ class Reserva {
   String usuario;
 
   factory Reserva.fromJson(Map<String, dynamic> json) => Reserva(
-        fecha: DateTime.parse(json["fecha"]),
-        hora: json["hora"],
-        personas: json["personas"],
-        mesa: json["mesa"],
-        gatos: json["gatos"],
-        usuario: json["usuario"],
+        id: json["id"],
+        fecha: DateTime.parse(json["fecha_reserva"]),
+        hora: json["hora_reserva"],
+        personas: json["cantidadPersonas"],
+        mesa: json["num_mesa"],
+        gatos: json["cantidadGatos"],
+        usuario: json["id_usuario"].toString(),
       );
 
   Map<String, dynamic> toJson() => {

@@ -18,18 +18,23 @@ class ReservasServices {
   }
 
   Future<List<Reserva>> listarReservasUsuario(String dni) async {
-    final url = 'https://api-pruebas2020.herokuapp.com/Reserva/ConsultarReserva/$dni';
-    final response = await http.get(url);
-    final List<dynamic> decodedData = json.decode(response.body);
-    final List<Reserva> listTemp = List();
-    if (decodedData != null) {
+    try {
+      final url =
+          'https://api-pruebas2020.herokuapp.com/Reserva/ConsultarReserva/$dni';
+      final response = await http.get(url);
+      final List<dynamic> decodedData = json.decode(response.body);
+      final List<Reserva> listTemp = List();
       decodedData.forEach((item) {
+        print(item);
         final temp = Reserva.fromJson(item);
         listTemp.add(temp);
       });
       return listTemp;
-    } else {
+    } catch (e) {
+      print(e);
       return [];
     }
   }
 }
+
+final servicesReservas = ReservasServices();

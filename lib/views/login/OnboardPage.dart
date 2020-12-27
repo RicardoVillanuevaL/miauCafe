@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:miau_caffe_mobile/services/Preferences/PreferenciasUsuario.dart';
 import 'package:miau_caffe_mobile/views/login/LoginPage.dart';
 
 class OnBoardPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class _OnBoardPageState extends State<OnBoardPage> {
   final int _numPages = 3;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
+  final prefs = PreferenciasUsuario();
 
   List<Widget> _buildPageIndicador() {
     List<Widget> list = [];
@@ -120,9 +122,13 @@ class _OnBoardPageState extends State<OnBoardPage> {
               width: double.infinity,
               color: Colors.white,
               child: GestureDetector(
-                onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                    CupertinoPageRoute(builder: (context) => LoginPage()),
-                    (route) => false),
+                onTap: () {
+                  prefs.skipCarrusel = true;
+                  print(prefs.skipCarrusel);
+                  Navigator.of(context).pushAndRemoveUntil(
+                      CupertinoPageRoute(builder: (context) => LoginPage()),
+                      (route) => false);
+                },
                 child: Center(
                   child: Text(
                     'Empezar',
@@ -213,9 +219,13 @@ class _OnBoardPageState extends State<OnBoardPage> {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-        onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-            CupertinoPageRoute(builder: (context) => LoginPage()),
-            (route) => false),
+        onPressed: () {
+          prefs.skipCarrusel = true;
+          print(prefs.skipCarrusel);
+          Navigator.of(context).pushAndRemoveUntil(
+              CupertinoPageRoute(builder: (context) => LoginPage()),
+              (route) => false);
+        },
         child: Text(
           'Skip',
           style: TextStyle(

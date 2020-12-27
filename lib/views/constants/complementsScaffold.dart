@@ -1,11 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+final loadSplash = Center(child: CupertinoActivityIndicator(radius: 15));
+
 class SpecialAppBar extends StatelessWidget {
-  final double width,height;
+  final double width, height;
   final Widget child;
   final String title;
   final IconData icon;
-  const SpecialAppBar({Key key, this.width, this.height,this.child, this.title, this.icon})
+  const SpecialAppBar(
+      {Key key, this.width, this.height, this.child, this.title, this.icon})
       : super(key: key);
 
   @override
@@ -36,7 +40,10 @@ class SpecialAppBar extends StatelessWidget {
               ],
             ),
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(25),
+                  bottomRight: Radius.circular(25))),
         ),
       ),
       Positioned(

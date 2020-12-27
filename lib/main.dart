@@ -4,6 +4,7 @@ import 'package:miau_caffe_mobile/services/Firebase/Authentication.dart';
 import 'package:miau_caffe_mobile/services/Preferences/PreferenciasUsuario.dart';
 import 'package:miau_caffe_mobile/views/login/OnboardPage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:miau_caffe_mobile/views/login/SplashScreen.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -14,7 +15,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   final prefs = new PreferenciasUsuario();
   await prefs.initPrefs();
-  
+
   //CORRIDA DE LA APLICACION
   runApp(MyApp());
 }
@@ -22,6 +23,8 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final prefs = PreferenciasUsuario();
+    print(prefs.skipCarrusel);
     return MultiProvider(
       providers: [
         Provider<AuthenticationServices>(
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.deepPurple,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: OnBoardPage(),
+        home: prefs.skipCarrusel ? SplashScreen() : OnBoardPage(),
       ),
     );
   }

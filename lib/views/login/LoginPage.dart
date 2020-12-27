@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:miau_caffe_mobile/models/UsuarioModel.dart';
 import 'package:miau_caffe_mobile/services/Api%20Rest/Usuario_services.dart';
 import 'package:miau_caffe_mobile/services/Firebase/Authentication.dart';
+import 'package:miau_caffe_mobile/services/Preferences/PreferenciasUsuario.dart';
+import 'package:miau_caffe_mobile/views/constants/complementsScaffold.dart';
 import 'package:miau_caffe_mobile/views/dashboard/DashBoardPage.dart';
 import 'package:provider/provider.dart';
 import 'package:miau_caffe_mobile/notifications and dialog/dialogsCute.dart'
@@ -16,11 +20,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String email = '';
   String password = '';
-  bool obscureChange;
+  bool obscureChange, loadActivity;
+  final prefs = PreferenciasUsuario();
 
   @override
   void initState() {
     obscureChange = true;
+    loadActivity = false; // SE INICIALIZA EN FALSO
     super.initState();
   }
 
@@ -29,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
       dialog.pruebaDialogImagen(context, 'Oh no!', 'Complete los campos',
           'assets/imagenes/garrita.png');
     } else {
+      setState(() => loadActivity = true);
       final response = await context
           .read<AuthenticationServices>()
           .logeoUsuario(email, password);
@@ -36,15 +43,27 @@ class _LoginPageState extends State<LoginPage> {
         final resp =
             await usuarioServices.loginUsuario(email.trim(), password.trim());
         if (resp != null) {
+          setState(() => loadActivity = false);
+          //SE GUARDAN LOS PREFERENCES
+          prefs.correo = email.trim();
+          prefs.password = password.trim();
+          prefs.session = true;
+          prefs.dni = resp.id;
+          prefs.nombre = resp.nombre;
+          prefs.apellido = resp.apellido;
+          //VAMOS AL DASHBOARD
+          print(prefs.dni);
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => DashBoardMenu(
                     usuario: resp,
                   )));
         } else {
+          setState(() => loadActivity = false);
           dialog.pruebaDialogImagen(context, 'Oh no!', 'Intentelo mas tarde',
               'assets/imagenes/garrita.png');
         }
       } else {
+        setState(() => loadActivity = false);
         dialog.pruebaDialogImagen(context, 'Oh no!',
             'Ocurrio un error:\n$response', 'assets/imagenes/garrita.png');
       }
@@ -162,6 +181,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
+          loadActivity ? Positioned.fill(child: loadSplash) : Container()
         ]),
       ),
     );
@@ -272,194 +292,196 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool obscureChange;
+  String nombre, apellido, email, password, docIden;
+  bool obscureChange, loadActivity;
   Color colorSecundario = Color(0xFFb992c9);
   @override
   void initState() {
-    super.initState();
+    loadActivity = false;
+    docIden = '';
+    nombre = '';
+    apellido = '';
+    email = '';
+    password = '';
     obscureChange = true;
+    super.initState();
+  }
+
+  void registrar() async {
+    Usuario temp = Usuario();
+    if (email.trim().isEmpty ||
+        password.trim().isEmpty ||
+        nombre.trim().isEmpty ||
+        apellido.trim().isEmpty) {
+      dialog.pruebaDialogImagen(context, 'Oh no!', 'Complete los campos',
+          'assets/imagenes/garrita.png');
+    } else {
+      setState(() => loadActivity = true);
+      final response = await context
+          .read<AuthenticationServices>()
+          .registroUsuario(email, password);
+      if (response == 'registro') {
+        temp.id = docIden;
+        temp.apellido = apellido;
+        temp.nombre = nombre;
+        temp.correo = email;
+        temp.pass = password;
+        final data = await usuarioServices.registroUsuario(temp);
+        if (data != null) {
+          setState(() => loadActivity = false);
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => DashBoardMenu(
+                    usuario: temp,
+                  )));
+        } else {
+          setState(() => loadActivity = false);
+          dialog.pruebaDialogImagen(context, 'Oh no!', 'Intentelo mas tarde',
+              'assets/imagenes/garrita.png');
+        }
+      } else {
+        setState(() => loadActivity = false);
+        dialog.pruebaDialogImagen(context, 'Oh no!',
+            'Ocurrio un error:\n$response', 'assets/imagenes/garrita.png');
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        height: size.height,
-        width: double.infinity,
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Image.asset(
-                "assets/imagenes/main_top.png",
-                width: size.width * 0.3,
+        body: Container(
+            height: size.height,
+            width: double.infinity,
+            child: Stack(alignment: Alignment.center, children: <Widget>[
+              Positioned(
+                top: 0,
+                left: 0,
+                child: Image.asset(
+                  "assets/imagenes/main_top.png",
+                  width: size.width * 0.3,
+                ),
               ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              child: Image.asset(
-                "assets/imagenes/main_bottom.png",
-                width: size.width * 0.2,
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: Image.asset(
+                  "assets/imagenes/main_bottom.png",
+                  width: size.width * 0.2,
+                ),
               ),
-            ),
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "REGISTRO",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  TextFieldContainer(
-                    child: TextFormField(
-                      validator: (valor) {
-                        if (valor.isEmpty) {
-                          return "Complete este campo";
-                        } else {
-                          return "";
-                        }
-                      },
-                      onSaved: (value) {},
-                      obscureText: false,
-                      onChanged: (value) {},
-                      maxLines: 1,
-                      cursorColor: colorSecundario,
-                      decoration: InputDecoration(
-                          icon: Icon(
-                            Icons.person,
-                            color: colorSecundario,
-                          ),
-                          hintText: 'Nombre',
-                          border: InputBorder.none),
-                    ),
-                  ),
-                  TextFieldContainer(
-                    child: TextFormField(
-                      validator: (valor) {
-                        if (valor.isEmpty) {
-                          return "Complete este campo";
-                        } else {
-                          return "";
-                        }
-                      },
-                      onSaved: (value) {},
-                      obscureText: false,
-                      onChanged: (value) {},
-                      maxLines: 1,
-                      cursorColor: colorSecundario,
-                      decoration: InputDecoration(
-                          icon: Icon(
-                            Icons.person,
-                            color: colorSecundario,
-                          ),
-                          hintText: 'Apellido',
-                          border: InputBorder.none),
-                    ),
-                  ),
-                  TextFieldContainer(
-                    child: TextFormField(
-                      validator: (valor) {
-                        if (valor.isEmpty) {
-                          return "Complete este campo";
-                        } else {
-                          return "";
-                        }
-                      },
-                      onSaved: (value) {},
-                      obscureText: false,
-                      onChanged: (value) {},
-                      maxLines: 1,
-                      cursorColor: colorSecundario,
-                      decoration: InputDecoration(
-                          icon: Icon(
-                            Icons.mail_outline,
-                            color: colorSecundario,
-                          ),
-                          hintText: 'Correo Electronico',
-                          border: InputBorder.none),
-                    ),
-                  ),
-                  TextFieldContainer(
-                    child: TextFormField(
-                      validator: (valor) {
-                        if (valor.isEmpty) {
-                          return "Complete este campo";
-                        } else {
-                          return "";
-                        }
-                      },
-                      onSaved: (value) {},
-                      obscureText: false,
-                      onChanged: (value) {},
-                      maxLines: 1,
-                      cursorColor: colorSecundario,
-                      decoration: InputDecoration(
-                          icon: Icon(
-                            Icons.lock,
-                            color: colorSecundario,
-                          ),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                obscureChange = !obscureChange;
-                              });
-                            },
-                            child: Icon(
-                              Icons.visibility,
-                              color: colorSecundario,
-                            ),
-                          ),
-                          hintText: 'Contraseña',
-                          border: InputBorder.none),
-                    ),
-                  ),
-                  RoundedButton(
-                    text: "REGISTRAR",
-                    press: () {},
-                  ),
-                  SizedBox(height: size.height * 0.03),
-                  LinkTextChange(
-                    pageLogin: false,
-                    press: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
+              SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                    SizedBox(height: 40),
+                    Text("REGISTRO",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 20),
+                    TextFieldContainer(
+                        child: TextField(
+                            obscureText: false,
+                            onChanged: (value) => docIden = value,
+                            maxLines: 1,
+                            cursorColor: colorSecundario,
+                            decoration: InputDecoration(
+                                icon: Icon(
+                                  Icons.card_membership,
+                                  color: colorSecundario,
+                                ),
+                                hintText: 'Documento de Identidad',
+                                border: InputBorder.none))),
+                    TextFieldContainer(
+                        child: TextField(
+                            obscureText: false,
+                            onChanged: (value) => nombre = value,
+                            maxLines: 1,
+                            cursorColor: colorSecundario,
+                            decoration: InputDecoration(
+                                icon: Icon(
+                                  Icons.person,
+                                  color: colorSecundario,
+                                ),
+                                hintText: 'Nombre',
+                                border: InputBorder.none))),
+                    TextFieldContainer(
+                        child: TextField(
+                            obscureText: false,
+                            onChanged: (value) => apellido = value,
+                            maxLines: 1,
+                            cursorColor: colorSecundario,
+                            decoration: InputDecoration(
+                                icon: Icon(
+                                  Icons.person,
+                                  color: colorSecundario,
+                                ),
+                                hintText: 'Apellido',
+                                border: InputBorder.none))),
+                    TextFieldContainer(
+                        child: TextField(
+                            obscureText: false,
+                            onChanged: (value) => email = value,
+                            maxLines: 1,
+                            cursorColor: colorSecundario,
+                            decoration: InputDecoration(
+                                icon: Icon(
+                                  Icons.mail_outline,
+                                  color: colorSecundario,
+                                ),
+                                hintText: 'Correo Electronico',
+                                border: InputBorder.none))),
+                    TextFieldContainer(
+                        child: TextField(
+                            obscureText: false,
+                            onChanged: (value) => password = value,
+                            maxLines: 1,
+                            cursorColor: colorSecundario,
+                            decoration: InputDecoration(
+                                icon: Icon(
+                                  Icons.lock,
+                                  color: colorSecundario,
+                                ),
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      obscureChange = !obscureChange;
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.visibility,
+                                    color: colorSecundario,
+                                  ),
+                                ),
+                                hintText: 'Contraseña',
+                                border: InputBorder.none))),
+                    RoundedButton(text: "REGISTRAR", press: () => registrar()),
+                    SizedBox(height: size.height * 0.03),
+                    LinkTextChange(
+                        pageLogin: false,
+                        press: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
                             return LoginPage();
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  OrDivider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SocalIcon(
-                        iconSrc: "assets/iconos/facebook.svg",
-                        press: () {},
-                      ),
-                      SocalIcon(
-                        iconSrc: "assets/iconos/twitter.svg",
-                        press: () {},
-                      ),
-                      SocalIcon(
-                        iconSrc: "assets/iconos/google-plus.svg",
-                        press: () {},
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+                          }));
+                        }),
+                    OrDivider(),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SocalIcon(
+                              iconSrc: "assets/iconos/facebook.svg",
+                              press: () {}),
+                          SocalIcon(
+                              iconSrc: "assets/iconos/twitter.svg",
+                              press: () {}),
+                          SocalIcon(
+                              iconSrc: "assets/iconos/google-plus.svg",
+                              press: () {})
+                        ]),
+                    SizedBox(height: 40),
+                  ])),
+              loadActivity ? Positioned.fill(child: loadSplash) : Container()
+            ])));
   }
 }
 

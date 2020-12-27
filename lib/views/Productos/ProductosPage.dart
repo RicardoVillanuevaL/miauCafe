@@ -22,6 +22,7 @@ class _CatalogoProductosState extends State<CatalogoProductos> {
   void initState() {
     stateView = false;
     categorias = [
+      'Todos',
       'Cafés',
       'Desayunos',
       'Postres',
@@ -71,7 +72,8 @@ class _CatalogoProductosState extends State<CatalogoProductos> {
                 ? gridViewProductos()
                 : Center(
                     child: CircularProgressIndicator(),
-                  )
+                  ),
+            SizedBox(height: 30)
           ],
         ),
       ),
@@ -124,9 +126,7 @@ class _CatalogoProductosState extends State<CatalogoProductos> {
     List<Producto> products = listaProductos;
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: GridView.builder(
             itemCount: products.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -138,7 +138,7 @@ class _CatalogoProductosState extends State<CatalogoProductos> {
             itemBuilder: (context, index) => ItemCard(
                   color: Colors.white, // agregar el generador de colores
                   product: products[index],
-                  press: () => print('${products[index]}'),
+                  press: () {},
                 )),
       ),
     );
@@ -173,7 +173,10 @@ class ItemCard extends StatelessWidget {
               ),
               child: Hero(
                 tag: "${product.id}",
-                child: Image.network(product.image),
+                child: FadeInImage.assetNetwork(
+                  image: product.image,
+                  placeholder: 'assets/imagenes/load_cat.gif',
+                ),
               ),
             ),
           ),
