@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:miau_caffe_mobile/models/UsuarioModel.dart';
 import 'package:miau_caffe_mobile/services/Api%20Rest/Usuario_services.dart';
@@ -21,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   String email = '';
   String password = '';
   bool obscureChange, loadActivity;
-  final prefs = PreferenciasUsuario();
 
   @override
   void initState() {
@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void ingresar() async {
+  final prefs = PreferenciasUsuario();
     if (email.trim().isEmpty || password.trim().isEmpty) {
       dialog.pruebaDialogImagen(context, 'Oh no!', 'Complete los campos',
           'assets/imagenes/garrita.png');
@@ -70,119 +71,136 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<bool> fnWillScope() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return dialog.WillScopeOptionDialog(
+            message: '¿Desea cerrar el aplicativo?',
+            function: () {
+              SystemNavigator.pop();
+            },
+          );
+        });
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     Color colorSecundario = Color(0xFFb992c9);
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: size.height,
-        child: Stack(alignment: Alignment.center, children: [
-          Positioned(
-              top: 0,
-              left: 0,
+    return WillPopScope(
+      onWillPop: fnWillScope,
+      child: Scaffold(
+        body: Container(
+          width: double.infinity,
+          height: size.height,
+          child: Stack(alignment: Alignment.center, children: [
+            Positioned(
+                top: 0,
+                left: 0,
+                child: Image.asset(
+                  'assets/imagenes/main_top.png',
+                  width: size.width * 0.35,
+                )),
+            Positioned(
+                top: 50,
+                left: 300,
+                child: Image.asset(
+                  'assets/imagenes/huellita.png',
+                  width: 60,
+                )),
+            Positioned(
+                top: 150,
+                left: 130,
+                child: Image.asset(
+                  'assets/imagenes/huellita.png',
+                  width: 60,
+                )),
+            Positioned(
+              bottom: 0,
+              right: 0,
               child: Image.asset(
-                'assets/imagenes/main_top.png',
-                width: size.width * 0.35,
-              )),
-          Positioned(
-              top: 50,
-              left: 300,
-              child: Image.asset(
-                'assets/imagenes/huellita.png',
-                width: 60,
-              )),
-          Positioned(
-              top: 150,
-              left: 130,
-              child: Image.asset(
-                'assets/imagenes/huellita.png',
-                width: 60,
-              )),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Image.asset(
-              "assets/imagenes/login_bottom.png",
-              width: size.width * 0.4,
+                "assets/imagenes/login_bottom.png",
+                width: size.width * 0.4,
+              ),
             ),
-          ),
-          SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'LOGIN',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: size.height * 0.03),
-                SvgPicture.asset(
-                  'assets/imagenes/welcome.svg',
-                  height: size.height * 0.35,
-                ),
-                TextFieldContainer(
-                  child: TextField(
-                    obscureText: false,
-                    onChanged: (value) {
-                      email = value;
-                    },
-                    maxLines: 1,
-                    cursorColor: colorSecundario,
-                    decoration: InputDecoration(
-                        icon: Icon(
-                          Icons.person,
-                          color: colorSecundario,
-                        ),
-                        hintText: 'Correo Electronico',
-                        border: InputBorder.none),
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'LOGIN',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ),
-                TextFieldContainer(
-                  child: TextField(
-                    obscureText: obscureChange,
-                    onChanged: (value) {
-                      password = value;
-                    },
-                    maxLines: 1,
-                    cursorColor: colorSecundario,
-                    decoration: InputDecoration(
-                        icon: Icon(
-                          Icons.lock,
-                          color: colorSecundario,
-                        ),
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              obscureChange = !obscureChange;
-                            });
-                          },
-                          child: Icon(
-                            Icons.visibility,
+                  SizedBox(height: size.height * 0.03),
+                  SvgPicture.asset(
+                    'assets/imagenes/welcome.svg',
+                    height: size.height * 0.35,
+                  ),
+                  TextFieldContainer(
+                    child: TextField(
+                      obscureText: false,
+                      onChanged: (value) {
+                        email = value;
+                      },
+                      maxLines: 1,
+                      cursorColor: colorSecundario,
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.person,
                             color: colorSecundario,
                           ),
-                        ),
-                        hintText: 'Contraseña',
-                        border: InputBorder.none),
+                          hintText: 'Correo Electronico',
+                          border: InputBorder.none),
+                    ),
                   ),
-                ),
-                RoundedButton(
-                  text: 'INGRESAR',
-                  press: () => ingresar(),
-                ),
-                SizedBox(height: size.height * 0.03),
-                LinkTextChange(
-                  pageLogin: true,
-                  press: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RegisterPage()));
-                  },
-                )
-              ],
+                  TextFieldContainer(
+                    child: TextField(
+                      obscureText: obscureChange,
+                      onChanged: (value) {
+                        password = value;
+                      },
+                      maxLines: 1,
+                      cursorColor: colorSecundario,
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.lock,
+                            color: colorSecundario,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                obscureChange = !obscureChange;
+                              });
+                            },
+                            child: Icon(
+                              Icons.visibility,
+                              color: colorSecundario,
+                            ),
+                          ),
+                          hintText: 'Contraseña',
+                          border: InputBorder.none),
+                    ),
+                  ),
+                  RoundedButton(
+                    text: 'INGRESAR',
+                    press: () => ingresar(),
+                  ),
+                  SizedBox(height: size.height * 0.03),
+                  LinkTextChange(
+                    pageLogin: true,
+                    press: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => RegisterPage()));
+                    },
+                  )
+                ],
+              ),
             ),
-          ),
-          loadActivity ? Positioned.fill(child: loadSplash) : Container()
-        ]),
+            loadActivity ? Positioned.fill(child: loadSplash) : Container()
+          ]),
+        ),
       ),
     );
   }
@@ -271,8 +289,8 @@ class LinkTextChange extends StatelessWidget {
         SizedBox(
           width: 5,
         ),
-        GestureDetector(
-          onTap: press,
+        TextButton(
+          onPressed: press,
           child: Text(pageLogin ? 'Regístrate' : 'Logeate',
               style: TextStyle(
                 color: Color(0xFFb992c9),
@@ -432,7 +450,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 border: InputBorder.none))),
                     TextFieldContainer(
                         child: TextField(
-                            obscureText: false,
+                            obscureText: obscureChange,
                             onChanged: (value) => password = value,
                             maxLines: 1,
                             cursorColor: colorSecundario,

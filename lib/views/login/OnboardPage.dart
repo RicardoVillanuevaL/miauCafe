@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:miau_caffe_mobile/notifications%20and%20dialog/dialogsCute.dart';
 import 'package:miau_caffe_mobile/services/Preferences/PreferenciasUsuario.dart';
 import 'package:miau_caffe_mobile/views/login/LoginPage.dart';
 
@@ -40,108 +41,125 @@ class _OnBoardPageState extends State<OnBoardPage> {
     );
   }
 
+  Future<bool> fnWillScope() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return WillScopeOptionDialog(
+            message: '¿Desea cerrar el aplicativo?',
+            function: () {
+              SystemNavigator.pop();
+            },
+          );
+        });
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final heightView = size.height;
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                Color(0xFFbeaac6),
-                Color(0xFFb992c9),
-                Color(0xFFb992c9),
-                Color(0xFFbeaac6),
-              ],
-                  stops: [
-                0.1,
-                0.4,
-                0.7,
-                0.9
-              ])),
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                skipWidget(),
-                pageView(heightView),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: _buildPageIndicador(),
-                ),
-                _currentPage != _numPages - 1
-                    ? Expanded(
-                        child: Align(
-                          alignment: FractionalOffset.bottomRight,
-                          child: FlatButton(
-                            onPressed: () {
-                              _pageController.nextPage(
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.ease,
-                              );
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    'Siguiente',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22.0,
+    return WillPopScope(
+      onWillPop: fnWillScope,
+      child: Scaffold(
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                  Color(0xFFbeaac6),
+                  Color(0xFFb992c9),
+                  Color(0xFFb992c9),
+                  Color(0xFFbeaac6),
+                ],
+                    stops: [
+                  0.1,
+                  0.4,
+                  0.7,
+                  0.9
+                ])),
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  skipWidget(),
+                  pageView(heightView),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _buildPageIndicador(),
+                  ),
+                  _currentPage != _numPages - 1
+                      ? Expanded(
+                          child: Align(
+                            alignment: FractionalOffset.bottomRight,
+                            child: FlatButton(
+                              onPressed: () {
+                                _pageController.nextPage(
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.ease,
+                                );
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      'Siguiente',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 22.0,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 10.0),
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ),
-                                ],
+                                    SizedBox(width: 10.0),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: Colors.white,
+                                      size: 30.0,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      )
-                    : Text(''),
-              ],
+                        )
+                      : Text(''),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      bottomSheet: _currentPage == _numPages - 1
-          ? Container(
-              height: heightView / 8.4,
-              width: double.infinity,
-              color: Colors.white,
-              child: GestureDetector(
-                onTap: () {
-                  prefs.skipCarrusel = true;
-                  print(prefs.skipCarrusel);
-                  Navigator.of(context).pushAndRemoveUntil(
-                      CupertinoPageRoute(builder: (context) => LoginPage()),
-                      (route) => false);
-                },
-                child: Center(
-                  child: Text(
-                    'Empezar',
-                    style: TextStyle(
-                      color: Color(0xFFb992c9),
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+        bottomSheet: _currentPage == _numPages - 1
+            ? Container(
+                height: heightView / 8.4,
+                width: double.infinity,
+                color: Colors.white,
+                child: GestureDetector(
+                  onTap: () {
+                    prefs.skipCarrusel = true;
+                    print(prefs.skipCarrusel);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        CupertinoPageRoute(builder: (context) => LoginPage()),
+                        (route) => false);
+                  },
+                  child: Center(
+                    child: Text(
+                      'Empezar',
+                      style: TextStyle(
+                        color: Color(0xFFb992c9),
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )
-          : Text(''),
+              )
+            : Text(''),
+      ),
     );
   }
 

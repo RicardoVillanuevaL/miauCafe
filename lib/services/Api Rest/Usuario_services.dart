@@ -10,7 +10,7 @@ class UsuarioServices {
         body: usuarioToJson(model));
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
-    if (response.statusCode == 201 || response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return true;
     } else {
       return false;

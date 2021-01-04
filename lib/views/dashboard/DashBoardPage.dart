@@ -4,6 +4,7 @@ import 'package:miau_caffe_mobile/services/Preferences/PreferenciasUsuario.dart'
 import 'package:miau_caffe_mobile/views/Productos/ProductosPage.dart';
 import 'package:miau_caffe_mobile/views/constants/complementsScaffold.dart';
 import 'package:miau_caffe_mobile/notifications and dialog/dialogsCute.dart';
+import 'package:miau_caffe_mobile/views/login/LoginPage.dart';
 
 class DashBoardMenu extends StatefulWidget {
   final Usuario usuario;
@@ -15,7 +16,10 @@ class DashBoardMenu extends StatefulWidget {
 
 class _DashBoardMenuState extends State<DashBoardMenu> {
   Usuario _usuario;
-  final prefs = PreferenciasUsuario();
+  final prefs =
+      PreferenciasUsuario(); // SI TIENE EL FINAL NO SE PUEDEN CAMBIAR SUS VARIABLES
+  PreferenciasUsuario _prefs =
+      PreferenciasUsuario(); // PARA QUE SE CAMBIE LAS VARIABLES
 
   @override
   void initState() {
@@ -37,43 +41,69 @@ class _DashBoardMenuState extends State<DashBoardMenu> {
     }
   }
 
+  Future<bool> fnWillScope() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return WillScopeOptionDialog(
+            message: '¿Desea cerrar el sesión?',
+            function: () {
+              _prefs.dni = "";
+              _prefs.nombre = "";
+              _prefs.apellido = "";
+              _prefs.correo = "";
+              _prefs.password = "";
+              _prefs.session = false;
+              _prefs.skipCarrusel = false;
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  (_) => false);
+            },
+          );
+        });
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-        body: Container(
-            color: Colors.white,
-            width: double.infinity,
-            height: size.height,
-            child: Stack(alignment: Alignment.center, children: [
-              Positioned(
-                  child: SpecialAppBar(
+    return WillPopScope(
+      onWillPop: fnWillScope,
+      child: Scaffold(
+          body: Container(
+              color: Colors.white,
+              width: double.infinity,
+              height: size.height,
+              child: Stack(alignment: Alignment.center, children: [
+                Positioned(
+                    child: SpecialAppBar(
+                        width: size.width,
+                        height: size.height * 0.24,
+                        title: 'Miau Cafe',
+                        icon: Icons.local_cafe,
+                        child: Column(children: [
+                          CircleAvatar(
+                              radius: 28,
+                              backgroundColor: Color(0xFF8c5f9e),
+                              child: Text('${_usuario.nombre.substring(0, 1)}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold))),
+                          SizedBox(height: 5),
+                          Text('${_usuario.nombre} ${_usuario.apellido}',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold))
+                        ])),
+                    top: 0),
+                Positioned(
+                    child: SpecialBottomSheet(
                       width: size.width,
-                      height: size.height * 0.24,
-                      title: 'Miau Cafe',
-                      icon: Icons.local_cafe,
-                      child: Column(children: [
-                        CircleAvatar(
-                            radius: 28,
-                            backgroundColor: Color(0xFF8c5f9e),
-                            child: Text('${_usuario.nombre.substring(0, 1)}',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold))),
-                        SizedBox(height: 5),
-                        Text('${_usuario.nombre} ${_usuario.apellido}',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold))
-                      ])),
-                  top: 0),
-              Positioned(
-                  child: SpecialBottomSheet(
-                    width: size.width,
-                  ),
-                  bottom: 0),
-              DashBoardBody()
-            ])));
+                    ),
+                    bottom: 0),
+                DashBoardBody()
+              ]))),
+    );
   }
 }
 

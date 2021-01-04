@@ -5,11 +5,11 @@ import 'package:miau_caffe_mobile/models/ReservasModel.dart';
 import 'package:miau_caffe_mobile/views/constants/complementsScaffold.dart';
 import 'package:intl/intl.dart';
 import 'package:miau_caffe_mobile/views/constants/constantsDesign.dart';
-import 'package:miau_caffe_mobile/views/dashboard/DashBoardPage.dart';
 
 class DetailReservaPage extends StatefulWidget {
   final Reserva reserva;
-  DetailReservaPage(this.reserva);
+  final Function funtion;
+  DetailReservaPage(this.reserva, this.funtion);
 
   @override
   _DetailReservaPageState createState() => _DetailReservaPageState();
@@ -27,7 +27,7 @@ class _DetailReservaPageState extends State<DetailReservaPage> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            BodyDetalleReserva(widget.reserva),
+            BodyDetalleReserva(widget.reserva, widget.funtion),
             Positioned(
               top: 0,
               child: SpecialAppBar(
@@ -50,7 +50,8 @@ class _DetailReservaPageState extends State<DetailReservaPage> {
 
 class BodyDetalleReserva extends StatefulWidget {
   final Reserva reserva;
-  BodyDetalleReserva(this.reserva);
+  final Function funtion;
+  BodyDetalleReserva(this.reserva, this.funtion);
 
   @override
   _BodyDetalleReservaState createState() => _BodyDetalleReservaState();
@@ -143,11 +144,7 @@ class _BodyDetalleReservaState extends State<BodyDetalleReserva> {
                       fontSize: 20,
                       color: Colors.white,
                       fontWeight: FontWeight.bold)),
-              onPressed: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                    CupertinoPageRoute(builder: (context) => DashBoardMenu()),
-                    (route) => false);
-              },
+              onPressed: widget.funtion,
             )
           ],
         ),

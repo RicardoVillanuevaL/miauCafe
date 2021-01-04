@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:day_night_time_picker/lib/constants.dart';
 import 'package:miau_caffe_mobile/services/Api Rest/Reservas_services.dart';
+import 'package:miau_caffe_mobile/views/dashboard/DashBoardPage.dart';
 import 'package:miau_caffe_mobile/views/reservas/DetailReservaPage.dart';
 
 class ReservasPage extends StatefulWidget {
@@ -385,7 +386,14 @@ class _BodyReservaState extends State<BodyReserva> {
                                     Navigator.of(context).push(
                                         CupertinoPageRoute(
                                             builder: (context) =>
-                                                DetailReservaPage(temp)));
+                                                DetailReservaPage(temp, () {
+                                                  Navigator.of(context)
+                                                      .pushAndRemoveUntil(
+                                                          CupertinoPageRoute(
+                                                              builder: (context) =>
+                                                                  DashBoardMenu()),
+                                                          (route) => false);
+                                                })));
                                   },
                                 ));
                       } else {

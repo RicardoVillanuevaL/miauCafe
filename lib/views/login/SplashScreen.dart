@@ -1,8 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:miau_caffe_mobile/notifications%20and%20dialog/dialogsCute.dart';
 import 'package:miau_caffe_mobile/services/Api%20Rest/Usuario_services.dart';
 import 'package:miau_caffe_mobile/services/Firebase/Authentication.dart';
 import 'package:miau_caffe_mobile/services/Preferences/PreferenciasUsuario.dart';
@@ -59,27 +61,43 @@ class _SplashScreenState extends State<SplashScreen> {
           (route) => false);
     }
   }
+   Future<bool> fnWillScope() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return WillScopeOptionDialog(
+            message: '¿Desea cerrar el aplicativo?',
+            function: () {
+              SystemNavigator.pop();
+            },
+          );
+        });
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Lottie.asset('assets/lottie/coffe_cat.json',
-                repeat: false, height: size.height / 2.5),
-            SizedBox(height: size.height * 0.05),
-            ZoomIn(
-              duration: Duration(milliseconds: 2500),
-              child: Text('BIENVENIDO',
-                  style: GoogleFonts.pacifico(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      wordSpacing: 0.8)),
-            )
-          ],
+    return WillPopScope(
+      onWillPop: fnWillScope,
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset('assets/lottie/coffe_cat.json',
+                  repeat: false, height: size.height / 2.5),
+              SizedBox(height: size.height * 0.05),
+              ZoomIn(
+                duration: Duration(milliseconds: 2500),
+                child: Text('BIENVENIDO',
+                    style: GoogleFonts.pacifico(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        wordSpacing: 0.8)),
+              )
+            ],
+          ),
         ),
       ),
     );

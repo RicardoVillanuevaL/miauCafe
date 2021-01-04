@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:miau_caffe_mobile/views/constants/constantsDesign.dart';
 import 'package:miau_caffe_mobile/views/reservas/MyReservacionesPage.dart';
@@ -145,7 +146,7 @@ class _SelectionReservacionDialogState
                           child: Image.asset(
                               'assets/imagenes/huellita_blanca.png',
                               height: 40)),
-                              Positioned(
+                      Positioned(
                           right: 10,
                           top: 40,
                           child: Image.asset(
@@ -325,6 +326,100 @@ class _DesingWaitingDialogState extends State<DesingWaitingDialog> {
                         fontWeight: FontWeight.bold,
                         fontSize: 16)),
                 onPressed: widget.function)
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//DIALOGO PARA EL USO DEL WILL SCOPE(RETROCESO DE PANTALLA)
+class WillScopeOptionDialog extends StatefulWidget {
+  final String message;
+  final Function function;
+  WillScopeOptionDialog({this.message, this.function});
+
+  @override
+  _WillScopeOptionDialogState createState() => _WillScopeOptionDialogState();
+}
+
+class _WillScopeOptionDialogState extends State<WillScopeOptionDialog> {
+  String _message;
+  Function _function;
+
+  @override
+  void initState() {
+    super.initState();
+    _message = widget.message;
+    _function = widget.function;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      elevation: 2,
+      backgroundColor: Colors.transparent,
+      child: SingleChildScrollView(
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding:
+                  EdgeInsets.only(top: 80, bottom: 16, left: 16, right: 16),
+              margin: EdgeInsets.only(top: 30),
+              decoration: BoxDecoration(
+                  color: colorSecundario,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(17),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 80.0,
+                        offset: Offset(10.0, 10.0))
+                  ]),
+              child: Column(
+                children: [
+                  Text('¡MIAU AVISO!', style: GoogleFonts.oswald(fontSize: 24)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Text('$_message',
+                        style: GoogleFonts.roboto(fontSize: 18)),
+                  ),
+                  Divider(
+                    height: 2,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextButton(
+                          child: Text('Si',
+                              style: GoogleFonts.oswald(fontSize: 20)),
+                          onPressed: _function),
+                      TextButton(
+                          child: Text('No',
+                              style: GoogleFonts.oswald(fontSize: 20)),
+                          onPressed: () => Navigator.of(context).pop()),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Positioned(
+                top: 0,
+                left: 16,
+                right: 16,
+                child: CircleAvatar(
+                  backgroundColor: colorSecundario,
+                  radius: 50,
+                  child: Container(
+                    child: Image.asset(
+                      'assets/imagenes/garrita.png',
+                      height: 90,
+                    ),
+                  ),
+                ))
           ],
         ),
       ),

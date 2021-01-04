@@ -28,7 +28,7 @@ class Usuario {
       );
 
   Map<String, dynamic> toJson() => {
-        "id_usuario": id,
+        "id": id,
         "nombre": nombre,
         "apellido": apellido,
         "correo": correo,
