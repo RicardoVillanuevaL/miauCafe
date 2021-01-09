@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:miau_caffe_mobile/models/UsuarioModel.dart';
 import 'package:miau_caffe_mobile/services/Preferences/PreferenciasUsuario.dart';
-import 'package:miau_caffe_mobile/views/Productos/ProductosPage.dart';
 import 'package:miau_caffe_mobile/views/constants/complementsScaffold.dart';
 import 'package:miau_caffe_mobile/notifications and dialog/dialogsCute.dart';
 import 'package:miau_caffe_mobile/views/login/LoginPage.dart';
+import 'package:miau_caffe_mobile/views/productos/ProductosPage.dart';
 
 class DashBoardMenu extends StatefulWidget {
   final Usuario usuario;
@@ -128,8 +128,8 @@ class _DashBoardBodyState extends State<DashBoardBody> {
       SpecialCard(
           text: 'Ver carta / Promociones',
           press: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CatalogoProductos()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CatalogoProductos('Miau Productos', 1)));
           },
           position: 'MID'),
       SpecialCard(text: 'Compra / Delivery', press: () {}, position: 'BOT'),

@@ -5,6 +5,8 @@ import 'package:miau_caffe_mobile/models/ReservasModel.dart';
 import 'package:miau_caffe_mobile/views/constants/complementsScaffold.dart';
 import 'package:intl/intl.dart';
 import 'package:miau_caffe_mobile/views/constants/constantsDesign.dart';
+import 'package:miau_caffe_mobile/views/pagos/PagosPage.dart';
+import 'package:miau_caffe_mobile/views/productos/ProductosPage.dart';
 
 class DetailReservaPage extends StatefulWidget {
   final Reserva reserva;
@@ -135,16 +137,51 @@ class _BodyDetalleReservaState extends State<BodyDetalleReserva> {
                 )),
             SizedBox(height: 15),
             RaisedButton(
-              color: colorTerceario,
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              child: Text('¡Listo!',
-                  style: GoogleFonts.lato(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold)),
-              onPressed: widget.funtion,
+                color: colorTerceario,
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                child: Text('¡Listo!',
+                    style: GoogleFonts.lato(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+                onPressed: widget.funtion),
+            SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                RaisedButton(
+                    color: colorTerceario,
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Text('Agregar\nPedido',
+                        style: GoogleFonts.lato(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => CatalogoProductos(
+                              'Agregue Miau Productos a su pedido', 1)));
+                    }),
+                RaisedButton(
+                    color: colorTerceario,
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Text('Pagar\nReserva',
+                        style: GoogleFonts.lato(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              PagosPage('reserva', 15.0)));
+                    }),
+              ],
             )
           ],
         ),

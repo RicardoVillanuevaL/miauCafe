@@ -1,10 +1,56 @@
 PENDIENTES CAFE
-//1.REGISTRO DE USUARIO
-//2.PREFENCIAS PARA LA PERMANENCIA DEL LOGUEO
-//3.USO CORRECTO DE LAS SHARED PREFERENCES
-//4.DIALOGOS DISEÑADOS
-5.DETALLE DE PRODUCTOS
-6.ERRORES DEL LOGUE DEL PRODUCTO /  DIMENSIONES / Y TIEMPO DE CARGA/
-//7.DETALLE DE LA RESERVA
-8.MOSTRAR RESERVAS DEL USUARIO
-//9.VALIDACIONES DE CAMBIO DE CONTRASEÑA
+///////////////////////1.CREAR MODELO PEDIDO Y DETALLE PEDIDO
+///////////////////////2.PROCEDIMIENTOS ALMACENADOS Y APIS
+///////////////////////3.AGREGAR EN DETALLE DE LA RESERVA, BOTONES "Agregar Pedido" "Pagar Reserva"
+///////////////////////4.MANEJAR TIPO DE ENRUTACION AL CATALOGO:
+///////////////////////                    -SI VIENE DEL INICIO TODO NORMAL
+///////////////////////                    -SI VIENE DE RESERVA CAMBIAR EL TITULO A AGREGUE PRODUCTOS A SU PEDIDO
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+5.AGREGAR EN CATALOGO UN FLOTANTE SI LA LISTA DEL PEDIDO ES MAYOR A UNO SE MUESTRA "TERMINAR PEDIDO"
+                    "TERMINAR PEDIDO" : IR  AUN PAGINA DONDE LISTA ESTOS PRODUCTOS,
+                    SE MANEJA LA CANTIDAD Y EL MONTO TOTAL EN UN CARD BONITO Y AL FINAL
+                    BOTONES DE PAGAR Y DE "AGREGAR RESERVA" O MOSTRAR LA RESERVA "DETALLES NOMAS"  QUE SE MANEJE CON PROVIDER SI VIENE DESDE EL FLUJO DE UNA RESERVA
+                    SE AGREGA A ESA AUTOMATICAMENTE SINO SALE EL BOTON "+ AGREGAR RESERVA" / "ESTOY EN LA TIENDA"
+6. CAMBIAR ESE BOTON A "REALIZAR PEDIDO"
+                    ESTE BOTON MOSTRARA PREGUNTARA "CON RESERVA" / "ESTOY EN LA TIENDA"
+                    "SI ES EL PRIMERO" MOSTRARA LAS RESERVAS PENDIENTES SIN PAGAR 
+7. FLUJO DE PAGO SENCILLO Y CON SHARED PREFERENCES FULL HARD CODE
+
+ESTADO DE RESERVA
+0 SIN PAGAR
+1 PAGADA
+2 CONSUMIDA
+
+ESTADO DE PEDIDO
+0 SIN PAGAR
+1 PAGADO
+2 CONSUMIDA
+
+
+DISEÑO DE LAS TABLAS
+Detalle_Pedido
+id_detalle_pedido	int
+id_producto	int
+cant_producto	int
+id_pedido	int
+
+Pedido
+id_pedido	int
+fecha_pedido	date
+tiempo_pedido	time
+estado_pedido	int
+id_cliente	varchar
+id_reserva	int
+//////////
+fecha, tiempo, estado, cliente, reserva
+
+Pago
+id_pago	int
+fecha_hora_pago	datetime
+monto_total_pago	double
+id_usuario	varchar
+concepto	varchar
+
+fecha_hora_pago ,monto_total_pago ,id_usuario ,concepto
+
+fecha_hora, monto_total, usuario, concepto

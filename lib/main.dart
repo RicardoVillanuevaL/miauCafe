@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:miau_caffe_mobile/provider/PedidoProvider.dart';
 import 'package:miau_caffe_mobile/services/Firebase/Authentication.dart';
 import 'package:miau_caffe_mobile/services/Preferences/PreferenciasUsuario.dart';
 import 'package:miau_caffe_mobile/views/login/OnboardPage.dart';
@@ -21,6 +22,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final GlobalKey<NavigatorState> globalKey = new GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
     final prefs = PreferenciasUsuario();
@@ -33,9 +35,11 @@ class MyApp extends StatelessWidget {
         StreamProvider(
           create: (context) =>
               context.read<AuthenticationServices>().authStateChanges,
-        )
+        ),
+        ChangeNotifierProvider(create: (_) => PedidoProvider()) // para los pedidos
       ],
       child: MaterialApp(
+        navigatorKey: globalKey,
         title: 'Miau',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

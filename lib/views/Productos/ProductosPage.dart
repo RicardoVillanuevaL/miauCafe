@@ -3,13 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:miau_caffe_mobile/models/ProductoModel.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:miau_caffe_mobile/provider/PedidoProvider.dart';
 import 'package:miau_caffe_mobile/services/Api%20Rest/Productos_services.dart';
 import 'package:miau_caffe_mobile/views/constants/constantsDesign.dart';
+import 'package:provider/provider.dart';
 
 class CatalogoProductos extends StatefulWidget {
-  CatalogoProductos({this.app});
-  final FirebaseApp app;
+  CatalogoProductos(this.enrutamiento, this.enroot);
+  final String enrutamiento;
+  final int enroot;
 
   @override
   _CatalogoProductosState createState() => _CatalogoProductosState();
@@ -17,6 +19,9 @@ class CatalogoProductos extends StatefulWidget {
 
 class _CatalogoProductosState extends State<CatalogoProductos>
     with SingleTickerProviderStateMixin {
+  String titulo;
+  int root;
+  bool existeListaPedido;
   List<String> categorias = List();
   List<Producto> items = new List();
   int selectCategoria;
@@ -33,6 +38,9 @@ class _CatalogoProductosState extends State<CatalogoProductos>
   List<Producto> listaFespeciales = List();
   @override
   void initState() {
+    titulo = widget.enrutamiento;
+    root = widget.enroot;
+    existeListaPedido = false;
     stateView = false;
     categorias = [
       'Todos',
@@ -46,6 +54,7 @@ class _CatalogoProductosState extends State<CatalogoProductos>
     selectCategoria = 0;
     super.initState();
     cargarProductos();
+    existeListaPedido = context.read<PedidoProvider>().existeListaPedidos;
   }
 
   void cargarProductos() async {
@@ -123,7 +132,7 @@ class _CatalogoProductosState extends State<CatalogoProductos>
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Productos',
+                '$titulo',
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
@@ -138,6 +147,13 @@ class _CatalogoProductosState extends State<CatalogoProductos>
           ],
         ),
       ),
+      floatingActionButton: existeListaPedido
+          ? FloatingActionButton.extended(
+              icon: Icon(Icons.card_membership),
+              label: Text('Terminar Pedido'),
+              onPressed: () {},
+            )
+          : Container(),
     );
   }
 
@@ -372,6 +388,24 @@ class _DetalleProductoState extends State<DetalleProducto> {
                 textAlign: TextAlign.start,
                 style: GoogleFonts.lateef(fontSize: 22),
               ),
+              RaisedButton.icon(
+                color: colorPrimario,
+                icon: Icon(
+                  Icons.add,
+                  color: colorBlanco,
+                ),
+                label: Text(
+                  'Agregar al Carrito',
+                  style: GoogleFonts.lemonada(color: colorBlanco),
+                ),
+                onPressed: () {
+                  setState(() {
+                    context.read<PedidoProvider>().agregarProducto(_producto);
+                    context.read<PedidoProvider>().existeLista();
+                  });
+                  Navigator.pop(context);
+                },
+              )
             ],
           )),
     );
