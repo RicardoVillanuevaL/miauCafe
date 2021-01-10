@@ -6,6 +6,7 @@ import 'package:miau_caffe_mobile/models/ProductoModel.dart';
 import 'package:miau_caffe_mobile/provider/PedidoProvider.dart';
 import 'package:miau_caffe_mobile/services/Api%20Rest/Productos_services.dart';
 import 'package:miau_caffe_mobile/views/constants/constantsDesign.dart';
+import 'package:miau_caffe_mobile/views/pedidos/PedidosPage.dart';
 import 'package:provider/provider.dart';
 
 class CatalogoProductos extends StatefulWidget {
@@ -21,7 +22,6 @@ class _CatalogoProductosState extends State<CatalogoProductos>
     with SingleTickerProviderStateMixin {
   String titulo;
   int root;
-  bool existeListaPedido;
   List<String> categorias = List();
   List<Producto> items = new List();
   int selectCategoria;
@@ -40,7 +40,6 @@ class _CatalogoProductosState extends State<CatalogoProductos>
   void initState() {
     titulo = widget.enrutamiento;
     root = widget.enroot;
-    existeListaPedido = false;
     stateView = false;
     categorias = [
       'Todos',
@@ -54,7 +53,6 @@ class _CatalogoProductosState extends State<CatalogoProductos>
     selectCategoria = 0;
     super.initState();
     cargarProductos();
-    existeListaPedido = context.read<PedidoProvider>().existeListaPedidos;
   }
 
   void cargarProductos() async {
@@ -147,11 +145,12 @@ class _CatalogoProductosState extends State<CatalogoProductos>
           ],
         ),
       ),
-      floatingActionButton: existeListaPedido
+      floatingActionButton: context.watch<PedidoProvider>().existeListaPedidos
           ? FloatingActionButton.extended(
               icon: Icon(Icons.card_membership),
               label: Text('Terminar Pedido'),
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).push(
+                  CupertinoPageRoute(builder: (context) => PedidosPage(root))),
             )
           : Container(),
     );
@@ -390,6 +389,8 @@ class _DetalleProductoState extends State<DetalleProducto> {
               ),
               RaisedButton.icon(
                 color: colorPrimario,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)),
                 icon: Icon(
                   Icons.add,
                   color: colorBlanco,
@@ -399,10 +400,8 @@ class _DetalleProductoState extends State<DetalleProducto> {
                   style: GoogleFonts.lemonada(color: colorBlanco),
                 ),
                 onPressed: () {
-                  setState(() {
-                    context.read<PedidoProvider>().agregarProducto(_producto);
-                    context.read<PedidoProvider>().existeLista();
-                  });
+                  context.read<PedidoProvider>().agregarProducto(_producto);
+                  context.read<PedidoProvider>().existeLista();
                   Navigator.pop(context);
                 },
               )
